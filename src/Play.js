@@ -94,7 +94,7 @@ class Play extends Phaser.Scene {
         // Display text for shot counter, score, and percentage
         this.shotText = this.add.text(20, 20, `Shots: 0`, { fontSize: '24px', fill: '#fff' })
         this.scoreText = this.add.text(20, 50, `Score: 0`, { fontSize: '24px', fill: '#fff' })
-        this.percentageText = this.add.text(20, 80, `Success Rate: 0%`, { fontSize: '24px', fill: '#fff' })
+        this.percentageText = this.add.text(20, 80, `Accuracy: 0%`, { fontSize: '24px', fill: '#fff' })
     }
 
     update() {
@@ -109,7 +109,7 @@ class Play extends Phaser.Scene {
         this.scoreText.setText(`Score: ${this.score}`)
 
         let successRate = this.shotCount > 0 ? Math.round((this.successfulShots / this.shotCount) * 100) : 0
-        this.percentageText.setText(`Success Rate: ${successRate}%`)
+        this.percentageText.setText(`Accuracy: ${successRate}%`)
     }
 
     // Function to reset the ball's position
