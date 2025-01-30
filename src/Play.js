@@ -93,10 +93,28 @@ class Play extends Phaser.Scene {
 
         // ball/one-way collision
         this.physics.add.collider(this.ball, this.oneWay)
+
+        // style for text
+        const textStyle = {
+            fontFamily: 'Arial', // Change to any font you like
+            fontSize: '24px',
+            fontStyle: 'bold', // Can be 'italic', 'bold', 'bold italic'
+            color: '#FFD700', // Gold color
+            stroke: '#000000', // Outline color
+            strokeThickness: 3, // Thickness of the outline
+            shadow: {
+                offsetX: 2,
+                offsetY: 2,
+                color: '#000000',
+                blur: 2,
+                stroke: true,
+                fill: true
+            }
+        };
         // Display text for shot counter, score, and percentage
-        this.shotText = this.add.text(20, 20, `Shots: 0`, { fontSize: '24px', fill: '#fff' })
-        this.scoreText = this.add.text(20, 50, `Score: 0`, { fontSize: '24px', fill: '#fff' })
-        this.percentageText = this.add.text(20, 80, `Accuracy: 0%`, { fontSize: '24px', fill: '#fff' })
+        this.shotText = this.add.text(20, 20, `Shots: 0`, textStyle)
+        this.scoreText = this.add.text(20, 50, `Score: 0`, textStyle)
+        this.percentageText = this.add.text(20, 80, `Accuracy: 0%`, textStyle)
     }
 
     update() {
