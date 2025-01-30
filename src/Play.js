@@ -8,6 +8,10 @@ class Play extends Phaser.Scene {
         this.SHOT_VELOCITY_X = 200 // constant 
         this.SHOT_VELOCITY_Y_MIN = 700
         this.SHOT_VELOCITY_Y_MAX = 1100
+        // Initialize counters
+        this.shotCount = 0
+        this.successfulShots = 0
+        this.score = 0
     }
 
     preload() {
@@ -63,6 +67,7 @@ class Play extends Phaser.Scene {
         */
         // add pointer input for shooting the ball
         this.input.on('pointerdown', (pointer) => {
+            this.shotCount++
             // Determine the direction of the shot
             let shotDirectionX = pointer.x < this.ball.x ? 1 : -1; // If click is left of the ball, shoot right, else shoot left
             let shotDirectionY = pointer.y <= this.ball.y ? 1 : -1; // Direction for y (up or down)
@@ -74,7 +79,10 @@ class Play extends Phaser.Scene {
 
         // cup/ball collision
         this.physics.add.collider(this.ball, this.cup, (ball, cup) => {
-            this.resetBall()
+            this.successfulShots++
+            this.score += 10 // Increase score for each successful shot
+            this.updateDisplay() // Update the displayed values
+            this.resetBall() // Reset the ball position
         })
 
 
@@ -83,13 +91,25 @@ class Play extends Phaser.Scene {
 
         // ball/one-way collision
         this.physics.add.collider(this.ball, this.oneWay)
-
+        // Display text for shot counter, score, and percentage
+        this.shotText = this.add.text(20, 20, `Shots: 0`, { fontSize: '24px', fill: '#fff' })
+        this.scoreText = this.add.text(20, 50, `Score: 0`, { fontSize: '24px', fill: '#fff' })
+        this.percentageText = this.add.text(20, 80, `Success Rate: 0%`, { fontSize: '24px', fill: '#fff' })
     }
 
     update() {
-        // move the walls from side to side bouncing off the boundaries
+    // Update the display each frame
+    this.updateDisplay()
         
-        
+    }
+
+    updateDisplay() {
+        // Update shot counter, score, and successful shot percentage
+        this.shotText.setText(`Shots: ${this.shotCount}`)
+        this.scoreText.setText(`Score: ${this.score}`)
+
+        let successRate = this.shotCount > 0 ? Math.round((this.successfulShots / this.shotCount) * 100) : 0
+        this.percentageText.setText(`Success Rate: ${successRate}%`)
     }
 
     // Function to reset the ball's position
@@ -102,7 +122,7 @@ class Play extends Phaser.Scene {
 CODE CHALLENGE
 Try to implement at least 3/4 of the following features during the remainder of class (hint: each takes roughly 15 or fewer lines of code to implement):
 [X] Add ball reset logic on successful shot
-[ ] Improve shot logic by making pointer’s relative x-position shoot the ball in correct x-direction
+[X] Improve shot logic by making pointer’s relative x-position shoot the ball in correct x-direction
 [ ] Make one obstacle move left/right and bounce against screen edges
-[ ] Create and display shot counter, score, and successful shot percentage
+[X] Create and display shot counter, score, and successful shot percentage
 */
