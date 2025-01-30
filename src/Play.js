@@ -41,16 +41,18 @@ class Play extends Phaser.Scene {
         this.ball.body.setDamping(true).setDrag(0.5) // applies drag to slow the ball after hit
 
         // add walls
-        let wallA = this.physics.add.sprite(0, height / 4, 'wall')
-        wallA.setX(Phaser.Math.Between(0 + wallA.width / 2, width - wallA.width / 2))
-        wallA.body.setImmovable(true)
+        this.wallA = this.physics.add.sprite(0, height / 4, 'wall')
+        this.wallA.setX(Phaser.Math.Between(0 + this.wallA.width / 2, width - this.wallA.width / 2))
+        this.wallA.body.setImmovable(true)
+        this.wallA.body.setCollideWorldBounds(true); // Ensure it doesn't go out of bounds        
+        this.wallA.setVelocityX(100) // Initial movement to the right
 
         // cntrl + D will select a word and allow you to change multiple instances
         let wallB = this.physics.add.sprite(0, height / 2, 'wall')
         wallB.setX(Phaser.Math.Between(0 + wallB.width / 2, width - wallB.width / 2))
         wallB.body.setImmovable(true)
         
-        this.walls = this.add.group([wallA, wallB])
+        this.walls = this.add.group([this.wallA, wallB])
 
         // add one-way
         this.oneWay = this.physics.add.sprite(0, height / 4 * 3, 'oneway')
@@ -100,6 +102,13 @@ class Play extends Phaser.Scene {
     update() {
     // Update the display each frame
     this.updateDisplay()
+    // Bounce wallA when it hits the screen edges
+        // Manually check if wallA has hit the edges and reverse direction
+        if (this.wallA.x <= this.wallA.width / 2) {
+            this.wallA.setVelocityX(100); // Move right
+        } else if (this.wallA.x >= width - this.wallA.width / 2) {
+            this.wallA.setVelocityX(-100); // Move left
+        }
         
     }
 
@@ -123,6 +132,6 @@ CODE CHALLENGE
 Try to implement at least 3/4 of the following features during the remainder of class (hint: each takes roughly 15 or fewer lines of code to implement):
 [X] Add ball reset logic on successful shot
 [X] Improve shot logic by making pointer’s relative x-position shoot the ball in correct x-direction
-[ ] Make one obstacle move left/right and bounce against screen edges
+[X] Make one obstacle move left/right and bounce against screen edges
 [X] Create and display shot counter, score, and successful shot percentage
 */
