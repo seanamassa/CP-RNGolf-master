@@ -54,12 +54,23 @@ class Play extends Phaser.Scene {
         this.oneWay.body.setImmovable(true)
         this.oneWay.body.checkCollision.down = false
 
-        // add pointer input
+        /* // add pointer input (RNG BASED)
         this.input.on('pointerdown', (pointer) => {
             let shotDirection = pointer.y <= this.ball.y ? 1 : -1
             this.ball.body.setVelocityX(Phaser.Math.Between(-this.SHOT_VELOCITY_X, this.SHOT_VELOCITY_X))
             this.ball.body.setVelocityY(Phaser.Math.Between(this.SHOT_VELOCITY_Y_MIN, this.SHOT_VELOCITY_Y_MAX) * shotDirection)
         })
+        */
+        // add pointer input for shooting the ball
+        this.input.on('pointerdown', (pointer) => {
+            // Determine the direction of the shot
+            let shotDirectionX = pointer.x < this.ball.x ? 1 : -1; // If click is left of the ball, shoot right, else shoot left
+            let shotDirectionY = pointer.y <= this.ball.y ? 1 : -1; // Direction for y (up or down)
+        
+            // Set the velocity based on the pointer's x and y positions
+            this.ball.body.setVelocityX(shotDirectionX * Phaser.Math.Between(this.SHOT_VELOCITY_X, this.SHOT_VELOCITY_X * 2)); // Horizontal velocity
+            this.ball.body.setVelocityY(Phaser.Math.Between(this.SHOT_VELOCITY_Y_MIN, this.SHOT_VELOCITY_Y_MAX) * shotDirectionY); // Vertical velocity
+        })   
 
         // cup/ball collision
         this.physics.add.collider(this.ball, this.cup, (ball, cup) => {
@@ -90,7 +101,7 @@ class Play extends Phaser.Scene {
 /*
 CODE CHALLENGE
 Try to implement at least 3/4 of the following features during the remainder of class (hint: each takes roughly 15 or fewer lines of code to implement):
-[ ] Add ball reset logic on successful shot
+[X] Add ball reset logic on successful shot
 [ ] Improve shot logic by making pointer’s relative x-position shoot the ball in correct x-direction
 [ ] Make one obstacle move left/right and bounce against screen edges
 [ ] Create and display shot counter, score, and successful shot percentage
